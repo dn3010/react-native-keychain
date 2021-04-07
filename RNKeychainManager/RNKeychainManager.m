@@ -275,7 +275,6 @@ SecAccessControlCreateFlags accessControlValue(NSDictionary *options)
     (__bridge NSString *)kSecAttrServer: server,
     (__bridge NSString *)kSecReturnAttributes: (__bridge id)kCFBooleanTrue,
     (__bridge NSString *)kSecAttrSynchronizable: (__bridge id)kCFBooleanTrue
-    (__bridge NSString *)kSecAttrSynchronizable: (__bridge id)kCFBooleanTrue
     (__bridge NSString *)kSecReturnData: (__bridge id)kCFBooleanFalse
   };
 
@@ -385,7 +384,7 @@ RCT_EXPORT_METHOD(resetGenericPasswordForOptions:(NSDictionary *)options resolve
 {
   NSString *service = [self finalServiceValue:options];
 
-  OSStatus osStatus = [self deletePasswordsForService:service withOptions:options];
+  OSStatus osStatus = [self deletePasswordsForService:service];
 
   if (osStatus != noErr && osStatus != errSecItemNotFound) {
     NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:osStatus userInfo:nil];
