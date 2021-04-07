@@ -255,31 +255,28 @@ SecAccessControlCreateFlags accessControlValue(NSDictionary *options)
   });
 }
 
-- (OSStatus)deletePasswordsForService:(NSString *)service withOptions:(NSDictionary 
-* __nullable)options
+- (OSStatus)deletePasswordsForService:(NSString *)service 
 
 {
   NSDictionary *query = @{
     (__bridge NSString *)kSecClass: (__bridge id)(kSecClassGenericPassword),
     (__bridge NSString *)kSecAttrService: service,
     (__bridge NSString *)kSecReturnAttributes: (__bridge id)kCFBooleanTrue,
-    (__bridge NSString *)kSecAttrSynchronizable: (__bridge id)
-    (options[@"synchronized"] ? kCFBooleanTrue : kCFBooleanFalse),
+        (__bridge NSString *)kSecAttrSynchronizable: (__bridge id)kCFBooleanTrue
     (__bridge NSString *)kSecReturnData: (__bridge id)kCFBooleanFalse
   };
 
   return SecItemDelete((__bridge CFDictionaryRef) query);
 }
 
-- (OSStatus)deleteCredentialsForServer:(NSString *)server withOptions:(NSDictionary 
-* __nullable)options
+- (OSStatus)deleteCredentialsForServer:(NSString *)server 
 {
   NSDictionary *query = @{
     (__bridge NSString *)kSecClass: (__bridge id)(kSecClassInternetPassword),
     (__bridge NSString *)kSecAttrServer: server,
     (__bridge NSString *)kSecReturnAttributes: (__bridge id)kCFBooleanTrue,
-    (__bridge NSString *)kSecAttrSynchronizable: (__bridge id)
-    (options[@"synchronized"] ? kCFBooleanTrue : kCFBooleanFalse),
+    (__bridge NSString *)kSecAttrSynchronizable: (__bridge id)kCFBooleanTrue
+    (__bridge NSString *)kSecAttrSynchronizable: (__bridge id)kCFBooleanTrue
     (__bridge NSString *)kSecReturnData: (__bridge id)kCFBooleanFalse
   };
 
@@ -331,12 +328,11 @@ RCT_EXPORT_METHOD(setGenericPasswordForOptions:(NSDictionary *)options withUsern
     (__bridge NSString *)kSecClass: (__bridge id)(kSecClassGenericPassword),
     (__bridge NSString *)kSecAttrService: service,
     (__bridge NSString *)kSecAttrAccount: username,
-    (__bridge NSString *)kSecAttrSynchronizable: (__bridge id)
-    (options[@"synchronized"] ? kCFBooleanTrue : kCFBooleanFalse),
+    (__bridge NSString *)kSecAttrSynchronizable: (__bridge id)kCFBooleanTrue
     (__bridge NSString *)kSecValueData: [password dataUsingEncoding:NSUTF8StringEncoding]
   };
 
-  [self deletePasswordsForService:service withOptions:options];
+  [self deletePasswordsForService:service];
 
   [self insertKeychainEntry:attributes withOptions:options resolver:resolve rejecter:reject];
 }
@@ -356,8 +352,6 @@ RCT_EXPORT_METHOD(getGenericPasswordForOptions:(NSDictionary *)options resolver:
     (__bridge NSString *)kSecReturnAttributes: (__bridge id)kCFBooleanTrue,
     (__bridge NSString *)kSecReturnData: (__bridge id)kCFBooleanTrue,
     (__bridge NSString *)kSecMatchLimit: (__bridge NSString *)kSecMatchLimitOne,
-    (__bridge NSString *)kSecAttrSynchronizable: (__bridge id)
-    (options[@"synchronized"] ? kCFBooleanTrue : kCFBooleanFalse),
     (__bridge NSString *)kSecUseOperationPrompt: authenticationPrompt
   };
 
@@ -404,14 +398,13 @@ RCT_EXPORT_METHOD(resetGenericPasswordForOptions:(NSDictionary *)options resolve
 
 RCT_EXPORT_METHOD(setInternetCredentialsForServer:(NSString *)server withUsername:(NSString*)username withPassword:(NSString*)password withOptions:(NSDictionary *)options resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
-  [self deleteCredentialsForServer:server withOptions:options];
+  [self deleteCredentialsForServer:server];
 
   NSDictionary *attributes = @{
     (__bridge NSString *)kSecClass: (__bridge id)(kSecClassInternetPassword),
     (__bridge NSString *)kSecAttrServer: server,
     (__bridge NSString *)kSecAttrAccount: username,
-    (__bridge NSString *)kSecAttrSynchronizable: (__bridge id)
-    (options[@"synchronized"] ? kCFBooleanTrue : kCFBooleanFalse),
+    (__bridge NSString *)kSecAttrSynchronizable: (__bridge id)kCFBooleanTrue
     (__bridge NSString *)kSecValueData: [password dataUsingEncoding:NSUTF8StringEncoding]
   };
 
@@ -454,8 +447,7 @@ RCT_EXPORT_METHOD(getInternetCredentialsForServer:(NSString *)server withOptions
     (__bridge NSString *)kSecAttrServer: server,
     (__bridge NSString *)kSecReturnAttributes: (__bridge id)kCFBooleanTrue,
     (__bridge NSString *)kSecReturnData: (__bridge id)kCFBooleanTrue,
-    (__bridge NSString *)kSecAttrSynchronizable: (__bridge id)
-    (options[@"synchronized"] ? kCFBooleanTrue : kCFBooleanFalse),
+    (__bridge NSString *)kSecAttrSynchronizable: (__bridge id)kCFBooleanTrue
     (__bridge NSString *)kSecMatchLimit: (__bridge NSString *)kSecMatchLimitOne
   };
 

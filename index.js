@@ -60,7 +60,6 @@ type Options = {
   authenticationPrompt?: string,
   authenticationType?: LAPolicy,
   service?: string,
-  synchronized?: boolean,
 };
 
 /**
