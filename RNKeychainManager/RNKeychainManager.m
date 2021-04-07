@@ -256,20 +256,19 @@ SecAccessControlCreateFlags accessControlValue(NSDictionary *options)
 }
 
 - (OSStatus)deletePasswordsForService:(NSString *)service 
-
 {
   NSDictionary *query = @{
     (__bridge NSString *)kSecClass: (__bridge id)(kSecClassGenericPassword),
     (__bridge NSString *)kSecAttrService: service,
     (__bridge NSString *)kSecReturnAttributes: (__bridge id)kCFBooleanTrue,
-        (__bridge NSString *)kSecAttrSynchronizable: (__bridge id)kCFBooleanTrue
+    (__bridge NSString *)kSecAttrSynchronizable: (__bridge id)kCFBooleanTrue
     (__bridge NSString *)kSecReturnData: (__bridge id)kCFBooleanFalse
   };
 
   return SecItemDelete((__bridge CFDictionaryRef) query);
 }
 
-- (OSStatus)deleteCredentialsForServer:(NSString *)server 
+- (OSStatus)deleteCredentialsForServer:(NSString *)server
 {
   NSDictionary *query = @{
     (__bridge NSString *)kSecClass: (__bridge id)(kSecClassInternetPassword),
@@ -480,7 +479,7 @@ RCT_EXPORT_METHOD(getInternetCredentialsForServer:(NSString *)server withOptions
 
 RCT_EXPORT_METHOD(resetInternetCredentialsForServer:(NSString *)server withOptions:(NSDictionary *)options resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
-  OSStatus osStatus = [self deleteCredentialsForServer:server withOptions:options];
+  OSStatus osStatus = [self deleteCredentialsForServer:server];
 
   if (osStatus != noErr && osStatus != errSecItemNotFound) {
     NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:osStatus userInfo:nil];
