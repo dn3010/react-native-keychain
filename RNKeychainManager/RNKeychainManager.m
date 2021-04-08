@@ -255,13 +255,15 @@ SecAccessControlCreateFlags accessControlValue(NSDictionary *options)
   });
 }
 
-- (OSStatus)deletePasswordsForService:(NSString *)service 
+- (OSStatus)deletePasswordsForService:(NSString *)service withOptions:(NSDictionary * __nullable)options
 {
   NSDictionary *query = @{
     (__bridge NSString *)kSecClass: (__bridge id)(kSecClassGenericPassword),
     (__bridge NSString *)kSecAttrService: service,
     (__bridge NSString *)kSecReturnAttributes: (__bridge id)kCFBooleanTrue,
-    (__bridge NSString *)kSecAttrSynchronizable: (__bridge id)kCFBooleanTrue,
+    //(__bridge NSString *)kSecAttrSynchronizable: (__bridge id)kCFBooleanTrue,
+    (__bridge NSString *)kSecAttrSynchronizable: (__bridge id)
+    (options[@"synchronized"] ? kCFBooleanTrue : kCFBooleanFalse),
     (__bridge NSString *)kSecReturnData: (__bridge id)kCFBooleanFalse
   };
 
@@ -384,7 +386,7 @@ RCT_EXPORT_METHOD(resetGenericPasswordForOptions:(NSDictionary *)options resolve
 {
   NSString *service = [self finalServiceValue:options];
 
-  OSStatus osStatus = [self deletePasswordsForService:service];
+  OSStatus osStatus = [self deletePasswordsForService:service withOptions:options]
 
   if (osStatus != noErr && osStatus != errSecItemNotFound) {
     NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:osStatus userInfo:nil];
