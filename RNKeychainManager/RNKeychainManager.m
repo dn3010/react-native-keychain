@@ -268,14 +268,13 @@ SecAccessControlCreateFlags accessControlValue(NSDictionary *options)
   return SecItemDelete((__bridge CFDictionaryRef) query);
 }
 
-- (OSStatus)deleteCredentialsForServer:(NSString *)server withOptions:(NSDictionary * __nullable)options
+- (OSStatus)deleteCredentialsForServer:(NSString *)server
 {
   NSDictionary *query = @{
     (__bridge NSString *)kSecClass: (__bridge id)(kSecClassInternetPassword),
     (__bridge NSString *)kSecAttrServer: server,
     (__bridge NSString *)kSecReturnAttributes: (__bridge id)kCFBooleanTrue,
-    (__bridge NSString *)kSecAttrSynchronizable: (__bridge id)
-    (options[@"synchronized"] ? kCFBooleanTrue : kCFBooleanFalse),
+    (__bridge NSString *)kSecAttrSynchronizable: (__bridge id)kCFBooleanTrue,
     (__bridge NSString *)kSecReturnData: (__bridge id)kCFBooleanFalse
   };
 
@@ -397,7 +396,7 @@ RCT_EXPORT_METHOD(resetGenericPasswordForOptions:(NSDictionary *)options resolve
 
 RCT_EXPORT_METHOD(setInternetCredentialsForServer:(NSString *)server withUsername:(NSString*)username withPassword:(NSString*)password withOptions:(NSDictionary *)options resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
-  [self deleteCredentialsForServer:server withOptions:options];
+  [self deleteCredentialsForServer:server];
 
   NSDictionary *attributes = @{
     (__bridge NSString *)kSecClass: (__bridge id)(kSecClassInternetPassword),
@@ -479,7 +478,7 @@ RCT_EXPORT_METHOD(getInternetCredentialsForServer:(NSString *)server withOptions
 
 RCT_EXPORT_METHOD(resetInternetCredentialsForServer:(NSString *)server withOptions:(NSDictionary *)options resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
-  OSStatus osStatus = [self deleteCredentialsForServer:server withOptions:options];
+  OSStatus osStatus = [self deleteCredentialsForServer:server];
 
   if (osStatus != noErr && osStatus != errSecItemNotFound) {
     NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:osStatus userInfo:nil];

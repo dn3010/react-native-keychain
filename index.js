@@ -137,11 +137,8 @@ export function getInternetCredentials(
  * @param {object} options Keychain options, iOS only
  * @return {Promise} Resolves to `true` when successful
  */
-export function resetInternetCredentials(
-  server: string,
-  options?: Options
-): Promise {
-  return RNKeychainManager.resetInternetCredentialsForServer(server, options);
+export function resetInternetCredentials(server: string): Promise {
+  return RNKeychainManager.resetInternetCredentialsForServer(server);
 }
 
 function getOptionsArgument(serviceOrOptions?: string | Options) {
